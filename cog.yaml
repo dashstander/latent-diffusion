@@ -26,9 +26,9 @@ build:
         - "torch-fidelity==0.3.0"
         - "transformers==4.3.1"
 
-run:
-    - "pip install git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers"
-    - "pip install git+https://github.com/openai/CLIP.git@main#egg=clip"
+    run:
+        - "pip install git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers"
+        - "pip install git+https://github.com/openai/CLIP.git@main#egg=clip"
   
 # predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"

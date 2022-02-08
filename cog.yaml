@@ -6,11 +6,11 @@ build:
     gpu: true
 
     # python version in the form '3.8' or '3.8.12'
-    python_version: "3.8.5"
+    python_version: "3.8"
 
     # a list of packages in the format <package-name>==<version>
     python_packages:
-        - "pytorch==1.8.1"
+        - "torch==1.8.1"
         - "torchvision==0.8.1"
         - "numpy==1.19.2"
         - "albumentations==0.4.3"

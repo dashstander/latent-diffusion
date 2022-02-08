@@ -28,10 +28,5 @@ build:
         - "git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers"
         - "git+https://github.com/openai/CLIP.git@main#egg=clip"
   
-  # commands run after the environment is setup
-  run:
-    # - "echo env is ready!"
-    # - "echo another command if needed"
-
 # predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"

@@ -1,3 +1,4 @@
 
 *.zip
 *.ckpt
+__pycache__/

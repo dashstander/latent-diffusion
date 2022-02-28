@@ -50,7 +50,7 @@ def make_mask(image, mask_region):
 def tensor_to_image_bytes(image_tensor):
     image_file = BytesIO()
     image_array = image_tensor.cpu().numpy().transpose(0, 2, 3, 1)[0] * 255
-    Image.fromarray(image_array.astype(np.uint8)).save(image_file)
+    Image.fromarray(image_array.astype(np.uint8)).save(image_file, format='png')
     return image_file
 
 

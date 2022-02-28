@@ -28,21 +28,20 @@ def make_batch(image_file, mask_region, device):
 
 
 def make_mask(image, mask_region):
-    print(image.shape)
-    size = image.shape[1:]
-    mask = np.zeros_like(image)
+    size = image.shape
+    mask = np.zeros_like(image.unsqueeze(0))
     if mask_region == 'top':
         cutoff = size[0] // 2
-        mask[:, :, :cutoff, :] = 1
+        mask[:, :cutoff, :] = 1
     elif mask_region == 'bottom':
         cutoff = size[0] // 2
-        mask[:, :, cutoff:, :] = 1
+        mask[:, cutoff:, :] = 1
     elif mask_region == 'left':
         cutoff = size[1] // 2
-        mask[:, :, :, :cutoff] = 1
+        mask[:, :, :cutoff] = 1
     elif mask_region == 'right':
         cutoff = size[1] // 2
-        mask[:, :, :, cutoff:] = 1
+        mask[:, :, cutoff:] = 1
     else:
         raise ValueError(f"Don't know how to mask region '{mask_region}'")
     return torch.from_numpy(mask)

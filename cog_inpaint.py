@@ -77,7 +77,7 @@ class InpaintPredictor(cog.BasePredictor):
         image: cog.Path = cog.Input(description='The image that will be inpainted.'),
         steps: int = cog.Input(description='The number of steps to use for the diffusion sampling', default=50, le=200, gt=0),
         mask_region: str = cog.Input(description='Which half of the image to mask.', default='top', choices=['top', 'bottom', 'left', 'right'])
-    ):
+    ) -> InpaintingOutput:
         with torch.no_grad(), self.model.ema_scope():
             batch = make_batch(image, mask_region, device=self.device)
             # encode masked image and concat downsampled mask

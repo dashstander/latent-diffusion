@@ -11,11 +11,14 @@ from main import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
 
 
-def make_batch(image, mask_region, device):
-    image = np.array(Image.open(image).convert("RGB"))
+def make_batch(image_file, mask_region, device):
+    pil_image = Image.open(image_file).convert("RGB")
+    image = np.array(pil_image)
+    bw_image = np.array(pil_image.convert('L'))
     image = image.astype(np.float32)/255.0
+    bw_image = bw_image.astype(np.float32)/255.0
     image = image[None].transpose(0,3,1,2)
-    mask = make_mask(image, mask_region)
+    mask = make_mask(bw_image, mask_region)
     image = torch.from_numpy(image)
     masked_image = (1 - mask) * image
     image = image * 2.0 - 1.0

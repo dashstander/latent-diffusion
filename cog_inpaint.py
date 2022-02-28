@@ -28,7 +28,8 @@ def make_batch(image_file, mask_region, device):
 
 
 def make_mask(image, mask_region):
-    size = image.shape[2:]
+    print(image.shape)
+    size = image.shape[1:]
     mask = np.zeros_like(image)
     if mask_region == 'top':
         cutoff = size[0] // 2

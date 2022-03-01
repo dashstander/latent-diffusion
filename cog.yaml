@@ -3,8 +3,6 @@
 
 build:
     
-    image: r8.im/compvis/latent-diffusion-inpainting
-    
     gpu: true
 
     cuda: "11.2"

@@ -52,12 +52,6 @@ def tensor_to_image(image_tensor):
     return Image.fromarray(image_array.astype(np.uint8))
 
 
-class InpaintingOutput(cog.BaseModel):
-    original_image: cog.File
-    masked_image: cog.File
-    inpainted_image: cog.File
-
-
 class InpaintPredictor(cog.BasePredictor):
     def setup(self):
         self.config = OmegaConf.load("models/ldm/inpainting_big/config.yaml")

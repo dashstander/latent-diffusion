@@ -2,7 +2,9 @@
 # Reference: https://github.com/replicate/cog/blob/main/docs/yaml.md
 
 build:
-    # set to true if your model requires a GPU
+    
+    image: r8.im/compvis/latent-diffusion-inpainting
+    
     gpu: true
 
     cuda: "11.2"

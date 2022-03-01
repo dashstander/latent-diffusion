@@ -31,4 +31,4 @@ build:
         - "pip install git+https://github.com/openai/CLIP.git@main#egg=clip"
         - "pip install git+https://github.com/bfirsh/taming-transformers.git@module#egg=taming-transformers"
 # predict.py defines how predictions are run on your model
-predict: "predict.py:Predictor"
+predict: "cog_inpaint.py:InpaintPredictor"

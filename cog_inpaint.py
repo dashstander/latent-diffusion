@@ -47,11 +47,9 @@ def make_mask(image, mask_region):
     return torch.from_numpy(mask)
 
 
-def tensor_to_image_bytes(image_tensor):
-    image_file = BytesIO()
+def tensor_to_image(image_tensor):
     image_array = image_tensor.cpu().numpy().transpose(0, 2, 3, 1)[0] * 255
-    Image.fromarray(image_array.astype(np.uint8)).save(image_file, format='png')
-    return image_file
+    return Image.fromarray(image_array.astype(np.uint8))
 
 
 class InpaintingOutput(cog.BaseModel):
@@ -77,9 +75,11 @@ class InpaintPredictor(cog.BasePredictor):
         image: cog.Path = cog.Input(description='The image that will be inpainted.'),
         steps: int = cog.Input(description='The number of steps to use for the diffusion sampling', default=50, le=200, gt=0),
         mask_region: str = cog.Input(description='Which half of the image to mask.', default='top', choices=['top', 'bottom', 'left', 'right'])
-    ) -> InpaintingOutput:
+    ) -> cog.Path:
         with torch.no_grad(), self.model.ema_scope():
             batch = make_batch(image, mask_region, device=self.device)
+            width = batch['image'].shape[-2]
+            height = batch['image'].shape[-1]
             # encode masked image and concat downsampled mask
             masked_image = batch["masked_image"]
             c = self.model.cond_stage_model.encode(batch["masked_image"])
@@ -110,8 +110,11 @@ class InpaintPredictor(cog.BasePredictor):
                 max=1.0
             )
             inpainted = (1 - mask) * image + mask * predicted_image
-            return InpaintingOutput(
-                original_image=tensor_to_image_bytes(image),
-                masked_image=tensor_to_image_bytes(masked_image),
-                inpainted_image=tensor_to_image_bytes(inpainted)
-            )
+
+            output_image = Image.new(mode='RGB', size = (width * 3, height))
+            output_image.paste(tensor_to_image(image), (0, 0))
+            output_image.paste(tensor_to_image(masked_image), (width, 0))
+            output_image.paste(tensor_to_image(inpainted), (width * 2, 0))
+            output_path = './output_image.png'
+            output_image.save(output_path)
+            return cog.Path(output_path)

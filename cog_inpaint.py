@@ -67,7 +67,7 @@ class InpaintPredictor(cog.BasePredictor):
     def predict(
         self,
         image: cog.Path = cog.Input(description='The image that will be inpainted.'),
-        steps: int = cog.Input(description='The number of steps to use for the diffusion sampling', default=50, le=200, gt=0),
+        steps: int = cog.Input(description='The number of steps to use for the diffusion sampling', default=50, lt=200, gt=0),
         mask_region: str = cog.Input(description='Which half of the image to mask.', default='top', choices=['top', 'bottom', 'left', 'right'])
     ) -> cog.Path:
         with torch.no_grad(), self.model.ema_scope():

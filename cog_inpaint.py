@@ -11,8 +11,13 @@ from main import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
 
 
+image_size = (128, 128)
+
+
 def make_batch(image_file, mask_region, device):
     pil_image = Image.open(image_file).convert("RGB")
+    if pil_image.size != image_size:
+        pil_image = pil_image.resize(image_size, Image.LANCZOS)
     image = np.array(pil_image)
     bw_image = np.array(pil_image.convert('L'))
     image = image.astype(np.float32)/255.0

@@ -11,8 +11,13 @@ from main import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
 
 
+image_size = (128, 128)
+
+
 def make_batch(image_file, mask_region, device):
     pil_image = Image.open(image_file).convert("RGB")
+    if pil_image.size != image_size:
+        pil_image = pil_image.resize(image_size, Image.LANCZOS)
     image = np.array(pil_image)
     bw_image = np.array(pil_image.convert('L'))
     image = image.astype(np.float32)/255.0
@@ -75,7 +80,7 @@ class InpaintPredictor(cog.BasePredictor):
     def predict(
         self,
         image: cog.Path = cog.Input(description='The image that will be inpainted.'),
-        steps: int = cog.Input(description='The number of steps to use for the diffusion sampling', default=50, lt=200, gt=0),
+        steps: int = cog.Input(description='The number of steps to use for the diffusion sampling', default=50, le=200, ge=1),
         mask_region: str = cog.Input(description='Which half of the image to mask.', default='top', choices=['top', 'bottom', 'left', 'right'])
     ) -> cog.Path:
         with torch.no_grad(), self.model.ema_scope():

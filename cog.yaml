@@ -2,16 +2,9 @@
 # Reference: https://github.com/replicate/cog/blob/main/docs/yaml.md
 
 build:
-    
-    image: r8.im/compvis/latent-diffusion-inpainting
-    
     gpu: true
-
     cuda: "11.2"
-
-    # python version in the form '3.8' or '3.8.12'
     python_version: "3.8"
-
     # a list of packages in the format <package-name>==<version>
     python_packages:
         - "numpy==1.19.2"
@@ -27,10 +20,9 @@ build:
         - "einops==0.3.0"
         - "torch-fidelity==0.3.0"
         - "transformers==4.3.1"
-
     run:
         - "pip install torch==1.10.2+cu113 torchvision==0.11.3+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html"
         - "pip install git+https://github.com/openai/CLIP.git@main#egg=clip"
         - "pip install git+https://github.com/bfirsh/taming-transformers.git@module#egg=taming-transformers"
-# predict.py defines how predictions are run on your model
-predict: "predict.py:Predictor"
+predict: "cog_inpaint.py:InpaintPredictor"
+

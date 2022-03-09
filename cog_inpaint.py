@@ -40,7 +40,7 @@ def make_mask(image, mask_region):
     y_rand = randint(0, size[1] - cutoff)
     mask_x = (x_rand, x_rand + cutoff)
     mask_y = (y_rand, y_rand + cutoff)
-    mask[:, :, mask_x[0]:mask_x[1], mask_y[0]:mask_y[1]]
+    mask[:, :, mask_x[0]:mask_x[1], mask_y[0]:mask_y[1]] = 1
     """
     if mask_region == 'top':
         cutoff = size[0] // 2

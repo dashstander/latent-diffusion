@@ -3,8 +3,8 @@ import os
 import cog
 from omegaconf import OmegaConf
 from PIL import Image
-from tqdm import tqdm
 import numpy as np
+from random import randint
 import torch
 from torch.nn.functional import interpolate
 from main import instantiate_from_config
@@ -30,6 +30,13 @@ def make_batch(image_file, mask_region, device):
 def make_mask(image, mask_region):
     size = image.shape
     mask = np.zeros_like(image[None, None])
+    cutoff = size[0] // 4
+    x_rand = randint(0, size[0] - cutoff)
+    y_rand = randint(0, size[1] - cutoff)
+    mask_x = (x_rand, x_rand + cutoff)
+    mask_y = (y_rand, y_rand + cutoff)
+    mask[:, :, mask_x[0]:mask_x[1], mask_y[0]:mask_y[1]]
+    """
     if mask_region == 'top':
         cutoff = size[0] // 2
         mask[:, :, :cutoff, :] = 1
@@ -44,6 +51,7 @@ def make_mask(image, mask_region):
         mask[:, :, :, cutoff:] = 1
     else:
         raise ValueError(f"Don't know how to mask region '{mask_region}'")
+    """
     return torch.from_numpy(mask)
 
 
@@ -103,7 +111,8 @@ class InpaintPredictor(cog.BasePredictor):
                 min=0.0,
                 max=1.0
             )
-            inpainted = (1 - mask) * image + mask * predicted_image
+            masked_image = (1 - mask) * image
+            inpainted = masked_image + mask * predicted_image
             output_image = Image.new(mode='RGB', size = (width * 3, height))
             output_image.paste(tensor_to_image(image), (0, 0))
             output_image.paste(tensor_to_image(masked_image), (width, 0))
